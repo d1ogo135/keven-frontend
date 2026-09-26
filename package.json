@@ -1,0 +1,63 @@
+{
+  "name": "frontend-fafire",
+  "private": true,
+  "type": "module",
+  "imports": {
+    "#/*": "./src/*"
+  },
+  "scripts": {
+    "dev": "concurrently \"npm run start:vite\" \"npm run start:api\"",
+    "start:vite": "vite dev --port 3000",
+    "start:api": "json-server --watch database.json --port 3333",
+    "generate-routes": "tsr generate",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint",
+    "format": "prettier --write . && eslint --fix",
+    "check": "prettier --check ."
+  },
+  "dependencies": {
+    "@chakra-ui/react": "2",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@hookform/resolvers": "^5.9.1",
+    "@tailwindcss/vite": "^4.1.18",
+    "@tanstack/react-devtools": "latest",
+    "@tanstack/react-router": "^1.170.32",
+    "@tanstack/react-router-devtools": "latest",
+    "@tanstack/react-start": "latest",
+    "framer-motion": "^13.1.1",
+    "json-server": "^0.17.4",
+    "lucide-react": "^1.45.0",
+    "nitro": "3.0.260610-beta",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-hook-form": "^7.88.0",
+    "tailwindcss": "^4.1.18",
+    "zod": "^4.6.2"
+  },
+  "devDependencies": {
+    "@tanstack/devtools-vite": "latest",
+    "@tanstack/eslint-config": "latest",
+    "@tanstack/router-cli": "^1.132.0",
+    "@tanstack/router-plugin": "^1.168.35",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^6.0.1",
+    "concurrently": "^10.0.5",
+    "eslint": "^9.20.0",
+    "prettier": "^3.8.1",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "lightningcss"
+    ]
+  },
+  "optionalDependencies": {
+    "@rolldown/binding-win32-x64-msvc": "^1.2.11"
+  }
+}
