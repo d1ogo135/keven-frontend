@@ -1,4 +1,4 @@
-﻿import {
+import {
   Box,
   Flex,
   Icon,
@@ -7,6 +7,12 @@
   HStack,
   Heading,
   Avatar,
+  IconButton,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  useDisclosure,
 } from "@chakra-ui/react";
 import {
   Link as RouterLink,
@@ -20,6 +26,7 @@ import {
   BookOpen,
   Building2,
   CalendarDays,
+  Menu,
 } from "lucide-react";
 
 export const Route = createRootRoute({
@@ -36,9 +43,55 @@ const NAV_LINKS = [
 ] as const;
 
 function RootComponent() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const SidebarContent = () => (
+    <>
+      <Flex h="20" align="center" px="8" borderBottom="1px solid" borderColor="darkBg.border">
+        <Flex
+          boxSize="10"
+          align="center"
+          justify="center"
+          rounded="xl"
+          bgGradient="linear(to-br, brand.400, brand.600)"
+          color="white"
+          fontWeight="black"
+          fontSize="xl"
+          boxShadow="0 0 20px rgba(144, 18, 255, 0.4)"
+        >
+          F
+        </Flex>
+        <Heading size="md" ml="4" letterSpacing="tighter" color="white">
+          Fafire<Text as="span" color="brand.400">Hub</Text>
+        </Heading>
+      </Flex>
+
+      <VStack spacing="2" align="stretch" px="4" py="8">
+        <Text fontSize="xs" fontWeight="bold" color="whiteAlpha.400" textTransform="uppercase" px="4" mb="2">
+          Menu Principal
+        </Text>
+        {NAV_LINKS.map((link) => (
+          <NavItem key={link.to} to={link.to} icon={link.icon} onClick={onClose}>
+            {link.label}
+          </NavItem>
+        ))}
+      </VStack>
+
+      <Box position="absolute" bottom="0" w="full" p="4" borderTop="1px solid" borderColor="darkBg.border">
+        <HStack spacing="4" p="3" rounded="xl" bg="whiteAlpha.50" cursor="pointer" _hover={{ bg: "whiteAlpha.100" }} transition="all 0.2s">
+          <Avatar size="sm" name="Diogo Sant ana" bg="brand.500" />
+          <Box>
+            <Text fontSize="sm" fontWeight="bold" color="white">Diogo Sant ana</Text>
+            <Text fontSize="xs" color="whiteAlpha.500">Admin</Text>
+          </Box>
+        </HStack>
+      </Box>
+    </>
+  );
+
   return (
     <Flex minH="100vh" bg="darkBg.main">
-      {/* Sidebar */}
+      {/* Sidebar Desktop */}
       <Box
         w="280px"
         bg="darkBg.surface"
@@ -48,46 +101,17 @@ function RootComponent() {
         h="100vh"
         display={{ base: "none", md: "block" }}
       >
-        <Flex h="20" align="center" px="8" borderBottom="1px solid" borderColor="darkBg.border">
-          <Flex
-            boxSize="10"
-            align="center"
-            justify="center"
-            rounded="xl"
-            bgGradient="linear(to-br, brand.400, brand.600)"
-            color="white"
-            fontWeight="black"
-            fontSize="xl"
-            boxShadow="0 0 20px rgba(144, 18, 255, 0.4)"
-          >
-            F
-          </Flex>
-          <Heading size="md" ml="4" letterSpacing="tighter" color="white">
-            Fafire<Text as="span" color="brand.400">Hub</Text>
-          </Heading>
-        </Flex>
-
-        <VStack spacing="2" align="stretch" px="4" py="8">
-          <Text fontSize="xs" fontWeight="bold" color="whiteAlpha.400" textTransform="uppercase" px="4" mb="2">
-            Menu Principal
-          </Text>
-          {NAV_LINKS.map((link) => (
-            <NavItem key={link.to} to={link.to} icon={link.icon}>
-              {link.label}
-            </NavItem>
-          ))}
-        </VStack>
-
-        <Box position="absolute" bottom="0" w="full" p="4" borderTop="1px solid" borderColor="darkBg.border">
-          <HStack spacing="4" p="3" rounded="xl" bg="whiteAlpha.50" cursor="pointer" _hover={{ bg: "whiteAlpha.100" }} transition="all 0.2s">
-            <Avatar size="sm" name="Diogo Sant ana" bg="brand.500" />
-            <Box>
-              <Text fontSize="sm" fontWeight="bold" color="white">Diogo Sant ana</Text>
-              <Text fontSize="xs" color="whiteAlpha.500">Admin</Text>
-            </Box>
-          </HStack>
-        </Box>
+        <SidebarContent />
       </Box>
+
+      {/* Drawer Mobile */}
+      <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
+        <DrawerOverlay />
+        <DrawerContent bg="darkBg.surface">
+          <DrawerCloseButton color="white" mt={4} />
+          <SidebarContent />
+        </DrawerContent>
+      </Drawer>
 
       {/* Main Content */}
       <Box flex="1" ml={{ base: 0, md: "280px" }}>
@@ -105,6 +129,14 @@ function RootComponent() {
           <Heading size="md" letterSpacing="tighter" color="white">
             Fafire<Text as="span" color="brand.400">Hub</Text>
           </Heading>
+          <IconButton
+            aria-label="Open menu"
+            icon={<Icon as={Menu} />}
+            variant="ghost"
+            color="white"
+            onClick={onOpen}
+            _hover={{ bg: "whiteAlpha.200" }}
+          />
         </Flex>
 
         <Box p={{ base: 4, md: 10 }} maxW="7xl" mx="auto">
@@ -115,12 +147,12 @@ function RootComponent() {
   );
 }
 
-function NavItem({ to, icon, children }: { to: string; icon: any; children: React.ReactNode }) {
+function NavItem({ to, icon, children, onClick }: { to: string; icon: any; children: React.ReactNode; onClick?: () => void }) {
   const location = useLocation();
   const isActive = location.pathname === to || (to !== '/' && location.pathname.startsWith(to));
 
   return (
-    <RouterLink to={to} style={{ textDecoration: 'none' }}>
+    <RouterLink to={to} style={{ textDecoration: 'none' }} onClick={onClick}>
       <Flex
         align="center"
         p="3"
